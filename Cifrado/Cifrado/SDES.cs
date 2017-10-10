@@ -45,7 +45,7 @@ namespace Cifrado
         }
         public string SW(string input)
         {
-            return input.Substring((input.Length / 2) - 1, input.Length/2) + input.Substring(0, input.Length/2);
+            return input.Substring((input.Length / 2), input.Length/2) + input.Substring(0, input.Length/2);
         }
         public void GenerateKeys(string unallave)
         {
@@ -62,7 +62,7 @@ namespace Cifrado
         public string xor(string input,string _keys)
         {
             string salida = "";
-            for (int i = 0; i < salida.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 salida += (input[i] == _keys[i]) ? 0 : 1;
             }
@@ -81,7 +81,7 @@ namespace Cifrado
         }
         private void escribirArchivo(byte[] bytesComprimidos,string ext)
         {
-            string folderName = @"c:\Archivos Comprimidos";
+            string folderName = @"c:\Archivos Cifrados";
             Directory.CreateDirectory(folderName);
             DirectoryInfo archivo = new DirectoryInfo(_path);
             string nombrenuearchivo = archivo.Name.Substring(0, (archivo.Name.Length - archivo.Extension.Length));
@@ -114,7 +114,7 @@ namespace Cifrado
             byte[] bytes = LecturaArchivo(_path);
             for (int i = 0; i < bytes.Length; i++)
             {
-                bytes[i] = CipherByte(bytes[i]);
+                bytes[i] = DesCipherByte(bytes[i]);
             }
 
             //Escritura del archivo Comprimido
@@ -158,11 +158,12 @@ namespace Cifrado
             string expyper = "";
             string per4 = "";
             left = input.Substring(0, input.Length / 2);
-            right = input.Substring((input.Length / 2) - 1, input.Length / 2);
+            right = input.Substring((input.Length / 2) , input.Length / 2);
             expyper = Salida(right, EP);
             expyper = xor(expyper, _key);
-            per4 = Sbox(expyper.Substring(0, expyper.Length / 2), s0) + Sbox(expyper.Substring((expyper.Length / 2) - 1, expyper.Length / 2), s1);
-            per4= xor(left, per4);
+            per4 = Sbox(expyper.Substring(0, expyper.Length / 2), s0) + Sbox(expyper.Substring((expyper.Length / 2) , expyper.Length / 2), s1);
+            per4 = Salida(per4, P4);
+            per4 = xor(left, per4);
             return per4 + right;
         }
         public string Sbox(string input, string[,] si)
