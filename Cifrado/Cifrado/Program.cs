@@ -19,6 +19,8 @@ namespace Cifrado
             var path = "";
             var option = "";
             instructions();
+            Console.WriteLine(Convert.ToBase64String(emitter.Key));
+            Console.WriteLine(Convert.ToBase64String(receiver.Key));
             while (option.Trim() != "-s")
             {
                 Console.Write("<Sistema de cifrado>");
@@ -31,12 +33,22 @@ namespace Cifrado
                 }
                 else if(option == "-c")
                 {
-                    //des.Cipher(path, conversions.ToDecimal(Convert.ToBase64String(emitter.Key)));
+                    string llavebinanira = "";
+                    for (int i = 0; i < 2; i++)
+                    {
+                        llavebinanira += Convert.ToString(emitter.Key[i], 2).PadLeft(8,'0');
+                    }
+                    des.Cipher(path, llavebinanira);
                     Console.WriteLine("Cifrado exitoso");
                 }
                 else if(option == "-d")
                 {
-                    //des.DesCipher(path, conversions.ToDecimal(Convert.ToBase64String(receiver.Key)));
+                    string llavebinanira = "";
+                    for (int i = 0; i < 2; i++)
+                    {
+                        llavebinanira += Convert.ToString(receiver.Key[i], 2).PadLeft(8, '0');
+                    }
+                    des.DesCipher(path, llavebinanira);
                     Console.WriteLine("Descifrado exitoso");
                 }
                 else

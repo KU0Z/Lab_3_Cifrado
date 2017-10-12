@@ -136,7 +136,7 @@ namespace Cifrado
                 listaDescomprimida.Add(DesCipherByte(bytes[i]));
             }
 
-            //Escritura del archivo Comprimido
+            //Escritura del archivo 
             escribirArchivo(listaDescomprimida.ToArray(), extencionArchivo);
         }
 
