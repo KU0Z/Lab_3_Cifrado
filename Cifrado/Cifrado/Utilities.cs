@@ -81,6 +81,27 @@ namespace Cifrado
             }
         }
 
+        public string ConvertToBinary(BigInteger value)
+        {
+            string binary = "";
+            if (value > 0)
+            {
+                while (value > 0)
+                {
+                    if (value % 2 == 0)
+                    {
+                        binary = "0" + binary;
+                    }
+                    else
+                    {
+                        binary = "1" + binary;
+                    }
+                    value = (int)value / 2;
+                }
+            }
+
+            return binary;
+        }
 
     }
 }
