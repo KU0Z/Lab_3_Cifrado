@@ -4,3 +4,6 @@ C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_3_C
 C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_3_Cifrado-master\Lab_3_Cifrado-master\Cifrado\Cifrado\bin\Debug\Cifrado.pdb
 C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_3_Cifrado-master\Lab_3_Cifrado-master\Cifrado\Cifrado\obj\Debug\Cifrado.exe
 C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_3_Cifrado-master\Lab_3_Cifrado-master\Cifrado\Cifrado\obj\Debug\Cifrado.pdb
+C:\Users\keviu\Source\Repos\Lab_3_Cifrado\Cifrado\Cifrado\bin\Debug\Cifrado.exe.config
+C:\Users\keviu\Source\Repos\Lab_3_Cifrado\Cifrado\Cifrado\obj\Debug\Cifrado.exe
+C:\Users\keviu\Source\Repos\Lab_3_Cifrado\Cifrado\Cifrado\obj\Debug\Cifrado.pdb

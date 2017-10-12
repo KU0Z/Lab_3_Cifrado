@@ -96,29 +96,48 @@ namespace Cifrado
         {
             _path = path;
             key = _key;
+            // Guardar extencion
+            DirectoryInfo archivo = new DirectoryInfo(_path);
+            List<byte> lista = new List<byte>();
+            byte bytesCantidad;
+            byte[] byteExtencion = ConvertirBinarioYTexto(archivo.Extension);
+            bytesCantidad = Convert.ToByte(archivo.Extension.Length);
+            lista.Add(bytesCantidad);
+            for (int i = 0; i < byteExtencion.Length; i++)
+            {
+                lista.Add(CipherByte(byteExtencion[i]));
+            }
             //Lectura de Bytes        
             byte[] bytes = LecturaArchivo(_path);
             for (int i = 0; i < bytes.Length; i++)
             {
-                bytes[i] = CipherByte(bytes[i]);
+                lista.Add(CipherByte(bytes[i]));
             }
 
             //Escritura del archivo Comprimido
-            escribirArchivo(bytes,".Cif");
+            escribirArchivo(lista.ToArray(), ".Cif");
         }
         public void DesCipher(string path, string _key)
         {
             _path = path;
             key = _key;
+            List<byte> listaDescomprimida = new List<byte>();     
             //Lectura de Bytes        
             byte[] bytes = LecturaArchivo(_path);
-            for (int i = 0; i < bytes.Length; i++)
+            int tamañoExtencion = Convert.ToInt32(bytes[0]);
+            byte[] bytesExtencion = new byte[tamañoExtencion];
+            for (int i = 0; i < tamañoExtencion; i++)
             {
-                bytes[i] = DesCipherByte(bytes[i]);
+                bytesExtencion[i] = DesCipherByte(bytes[i + 1]);
+            }
+            extencionArchivo = ConvertirBinarioYTexto(bytesExtencion);
+            for (int i = tamañoExtencion+1; i < bytes.Length; i++)
+            {
+                listaDescomprimida.Add(DesCipherByte(bytes[i]));
             }
 
             //Escritura del archivo Comprimido
-            escribirArchivo(bytes, ".txt");
+            escribirArchivo(listaDescomprimida.ToArray(), extencionArchivo);
         }
 
         public byte CipherByte(byte input)
@@ -173,11 +192,13 @@ namespace Cifrado
             return si[row, column];
         }
 
-
-        //public string xor(string E/p)
-
-        //{
-        //    return E/p;
-        //}
+        private string ConvertirBinarioYTexto(byte[] datosBinario)
+        {
+            return Encoding.ASCII.GetString(datosBinario);
+        }
+        private byte[] ConvertirBinarioYTexto(string datosTexto)
+        {
+            return Encoding.ASCII.GetBytes(datosTexto);
+        }
     }
 }
