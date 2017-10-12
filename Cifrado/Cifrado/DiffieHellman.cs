@@ -35,6 +35,7 @@ namespace Cifrado
 
         }
 
+
         public DiffieHellman GenerateRequest()
         {
 
@@ -53,6 +54,43 @@ namespace Cifrado
             rep.Append(conversions.ConvertToBase(send, 36));
 
             representation = rep.ToString();
+            return this;
+        }
+
+        public DiffieHellman GenerateRequest(int _mine)
+        {
+
+            prime = (BigInteger)734375557;
+            mine = _mine;
+            g = (BigInteger)5;
+
+            StringBuilder rep = new StringBuilder();
+            rep.Append(conversions.ConvertToBase(prime, 36));
+            rep.Append("|");
+            rep.Append(conversions.ConvertToBase(g, 36));
+            rep.Append("|");
+
+            BigInteger send = BigInteger.ModPow(g, mine, prime);
+            rep.Append(conversions.ConvertToBase(send, 36));
+
+            representation = rep.ToString();
+            return this;
+        }
+
+        public DiffieHellman GenerateResponse(string request, int _mine)
+        {
+            string[] parts = request.Split('|');
+
+            BigInteger prime = conversions.ToDecimal(parts[0]);
+            BigInteger g = conversions.ToDecimal(parts[1]);
+            BigInteger mine = _mine;
+            BigInteger given = conversions.ToDecimal(parts[2]);
+            BigInteger key = BigInteger.ModPow(given, mine, prime);
+            this.key = key.ToByteArray();
+            this.key = this.key.Reverse().ToArray();
+            BigInteger send = BigInteger.ModPow(g, mine, prime);
+            this.representation = conversions.ConvertToBase(send, 36);
+
             return this;
         }
 

@@ -13,36 +13,63 @@ namespace Cifrado
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Utilities conversions = new Utilities();
             SDES des = new SDES();
-            DiffieHellman emitter = new DiffieHellman(56).GenerateRequest();
-            DiffieHellman receiver = new DiffieHellman(56).GenerateResponse(emitter.ToString());
-            emitter.HandleResponse(receiver.ToString());
+            DiffieHellman emitter = new DiffieHellman(56);
+            DiffieHellman receiver = new DiffieHellman(56);
+         
             var path = "";
             var option = "";
+            bool flag = false;
+
+
+            while(!flag)
+            {
+                Console.Clear();
+                Console.WriteLine("¿Desea cifrar con una llave conocida?");
+                Console.WriteLine("1.Si / 2.No");
+                option = Console.ReadLine();
+                if (option == "1")
+                {
+                    var keyA = AskKey(true);
+                    var keyB = AskKey(false);
+                    emitter = new DiffieHellman(56).GenerateRequest(keyA);
+                    receiver = new DiffieHellman(56).GenerateResponse(emitter.ToString(), keyB);
+                    emitter.HandleResponse(receiver.ToString());
+                    flag = true;
+                }
+                else if(option == "2")
+                {
+                    emitter = new DiffieHellman(56).GenerateRequest();
+                    receiver = new DiffieHellman(56).GenerateResponse(emitter.ToString());
+                    emitter.HandleResponse(receiver.ToString());
+                    flag = true;
+                }
+            }
+
+
             instructions();
-            Console.WriteLine(Convert.ToBase64String(emitter.Key));
-            Console.WriteLine(Convert.ToBase64String(receiver.Key));
+           
             while (option.Trim() != "-s")
             {
+
                 Console.Write("<Sistema de cifrado>");
                 option = Console.ReadLine();
-                if (option == "-f")
+                if (option == "-c -f" )
                 {
-
                     Console.WriteLine("Ingrese la ruta del archivo");
-                    path = Console.ReadLine();                 
-                }
-                else if(option == "-c")
-                {
+                    path = Console.ReadLine();
+
                     string llavebinanira = "";
                     for (int i = 0; i < 2; i++)
                     {
-                        llavebinanira += Convert.ToString(emitter.Key[i], 2).PadLeft(8,'0');
+                       llavebinanira += Convert.ToString(emitter.Key[i], 2).PadLeft(8, '0');
                     }
                     des.Cipher(path, llavebinanira);
                     Console.WriteLine("Cifrado exitoso");
                 }
-                else if(option == "-d")
-                {
+                else if(option == "-d -f")
+                {                    
+                    Console.WriteLine("Ingrese la ruta del archivo");
+                    path = Console.ReadLine();
                     string llavebinanira = "";
                     for (int i = 0; i < 2; i++)
                     {
@@ -67,6 +94,36 @@ namespace Cifrado
             Console.WriteLine("Ingrese -c para cifrar");
             Console.WriteLine("Ingrese -d para descifrar");
             Console.WriteLine("Ingrese -s para salir");
+        }
+
+        static int AskKey(bool flag)
+        {
+            var key = 0;
+            if (flag)
+            {
+                Console.WriteLine("Ingrese su llave emisor");
+                try
+                {
+                    key = int.Parse(Console.ReadLine());
+                }
+                catch (InvalidCastException ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+                return key;
+            }
+
+            Console.WriteLine("Ingrese llave receptor");
+            try
+            {
+                key = int.Parse(Console.ReadLine());
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return key;
+
         }
     }
 }
