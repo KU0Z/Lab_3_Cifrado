@@ -10,7 +10,7 @@ namespace Cifrado
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.Green;
             Utilities conversions = new Utilities();
             SDES des = new SDES();
             DiffieHellman emitter = new DiffieHellman(56);
@@ -45,35 +45,64 @@ namespace Cifrado
 
 
             instructions();
-           
+
             while (option.Trim() != "-s")
             {
                 Console.Write("<Sistema de cifrado>");
                 option = Console.ReadLine();
                 if (option.Contains("-c -f"))
                 {
-                    path = option.Substring(5, option.Length - 5).Trim();
-
-                    string llavebinanira = "";
-                    for (int i = 0; i < 2; i++)
+                    try
                     {
-                        llavebinanira += Convert.ToString(emitter.Key[i], 2).PadLeft(8, '0');
+                        path = option.Substring(5, option.Length - 5).Trim();
+
+                        string llavebinanira = "";
+                        for (int i = 0; i < 2; i++)
+                        {
+                            llavebinanira += Convert.ToString(emitter.Key[i], 2).PadLeft(8, '0');
+                        }
+                        des.Cipher(path, llavebinanira);
+                        Console.WriteLine("Cifrado exitoso");
+
                     }
-                    des.Cipher(path, llavebinanira);
-                    Console.WriteLine("Cifrado exitoso");
+                    catch (System.IO.FileNotFoundException)
+                    {
+                       
+                        Console.WriteLine("Ruta no encontrada");
+                    }
+                    catch (Exception e)
+                    {
+
+                        Console.WriteLine("Se tuvo un error");
+                    }
+
                 }
                 else if (option.Contains("-d -f"))
                 {
-                    path = option.Substring(5, option.Length - 5).Trim();
-                    string llavebinanira = "";
-                    for (int i = 0; i < 2; i++)
+                    try
                     {
-                        llavebinanira += Convert.ToString(receiver.Key[i], 2).PadLeft(8, '0');
+                        path = option.Substring(5, option.Length - 5).Trim();
+                        string llavebinanira = "";
+                        for (int i = 0; i < 2; i++)
+                        {
+                            llavebinanira += Convert.ToString(receiver.Key[i], 2).PadLeft(8, '0');
+                        }
+                        des.DesCipher(path, llavebinanira);
+                        Console.WriteLine("Descifrado exitoso");
                     }
-                    des.DesCipher(path, llavebinanira);
-                    Console.WriteLine("Descifrado exitoso");
+                    catch (System.ArgumentException)
+                    {
+                        
+                        Console.WriteLine("No se pudo Descifrar el archivo llave incorrecta");
+                    }
+                    catch (Exception e)
+                    {
+
+                        Console.WriteLine("Se tuvo un error");
+                    }
+
                 }
-                else if(option == "-n")
+                else if (option == "-n")
                 {
                     flag = false;
                     keyA = 0;
@@ -105,17 +134,24 @@ namespace Cifrado
                 }
                 Console.WriteLine("Presione una tecla para continuar...");
                 Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine("La llave es: {0}", conversions.ToDecimal(Convert.ToBase64String(emitter.Key)));
+                instructions();
+
+
             }
         }
 
         static void instructions()
         {
             Console.WriteLine("Welcome");
+            Console.WriteLine("Comandos:");
             Console.WriteLine("Ingrese -f para ingresar la ruta del archivo");
             Console.WriteLine("Ingrese -c para cifrar");
             Console.WriteLine("Ingrese -d para descifrar");
-            Console.WriteLine("Ingrese -n para agregar nueva llave");
+            Console.WriteLine("Ingrese -n para cambiar la llave");
             Console.WriteLine("Ingrese -s para salir");
+            Console.WriteLine("Ejemplo:-c -f<Ruta de Archivo>");
         }
 
         static int AskKey(bool flag)
@@ -136,7 +172,11 @@ namespace Cifrado
                 if (validNumr && key > 0)
                     return key;
             }
-            Console.WriteLine("Ingrese un valor valido");
+            Console.WriteLine("Ingrese un valor valido numeros mayor a 0 y menores a 734375557");
+            Console.WriteLine("-Numeros mayor a 0 y menores a 734375557");
+            Console.WriteLine("-Llaves diferentes");
+            Console.WriteLine("Presione una tecla para continuar...");
+            Console.ReadKey();
             return 0;
         }
     }
