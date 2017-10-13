@@ -100,7 +100,7 @@ namespace Cifrado
 
             BigInteger prime = conversions.ToDecimal(parts[0]);
             BigInteger g = conversions.ToDecimal(parts[1]);
-            BigInteger mine = generator.Next(1000000, 9599172);
+            BigInteger mine = generator.Next(1000000, 734375557);
             BigInteger given = conversions.ToDecimal(parts[2]);
             BigInteger key = BigInteger.ModPow(given, mine, prime);
             this.key = key.ToByteArray();
